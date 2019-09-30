@@ -2,7 +2,7 @@ import os
 
 class Config:
 
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://wecode:passiwadi@localhost/pitches'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://wecode:passiwadi@localhost/posts'
     UPLOADED_PHOTOS_DEST ='app/static/photos'
     SECRET_KEY = 'jessica'
     # email configurations
@@ -12,6 +12,11 @@ class Config:
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
     SENDER_EMAIL = 'Nkujess@gmail.com'
+    # QUOTES-API = 'http://quotes.stormconsultancy.co.uk/random.json'
+    QUOTES_API = 'http://quotes.stormconsultancy.co.uk/random.json'
+    SIMPLEMDE_JS_IIFE = True
+    SIMPLEMDE_USE_CDN = True
+
 
 
 

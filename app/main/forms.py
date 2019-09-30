@@ -4,8 +4,8 @@ from wtforms.validators import Required
 
 class CommentForm(FlaskForm):
 
-    title = StringField('Comment title',validators=[Required()])
-    Comment = TextAreaField('pitch comment', validators=[Required()])
+    name = StringField('Comment title',validators=[Required()])
+    content = TextAreaField('blog comment', validators=[Required()])
     submit = SubmitField('Submit')
 
 # class UpdateProfile(FlaskForm):
@@ -13,10 +13,9 @@ class CommentForm(FlaskForm):
 #     submit = SubmitField('Submit')
 
 
-class PitchForm(FlaskForm):
+class BlogForm(FlaskForm):
 
-    description = StringField('pitch title',validators=[Required()])
+    description = StringField('blog description',validators=[Required()])
     # title = StringField('pitch title',validators=[Required()])
-    content = TextAreaField('Pitch here', validators=[Required()])
-    category = RadioField('Label', choices=[ ('Religion','Religion'), ('Politics','Politics'),('Business','Business'),('Innovation','Innovation')],validators=[Required()])
+    content = TextAreaField('Post your blog', validators=[Required()])
     submit = SubmitField('Submit')

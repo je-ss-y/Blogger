@@ -11,77 +11,53 @@
 {% block content %}
 
 <h1>
-    <a style ="text-align: center; color:black"; id ="frm" class ="navbar-brand" href="/pitches/new/"> Pitch form </a>
+    <a style ="text-align: center; color:black"; id ="frm" class ="navbar-brand" href="/post/new/"> Post form </a>
 </h1>
 
-<div class="container">
+<!-- <div class="container">
     <form>
         <input type="text" name="movie_query" placeholder="Search for new/favorite pitches" class="form-control">
         <input type="submit"  value="Submit" class="btn btn-info">
     </form>
 
-</div>
-<div class="container">
-    <form>
-        <input type="text" name="comment_query" placeholder="Post your comment" class="form-control">
-        <input type="submit"  value="Submit" class="btn btn-info">
-    </form>
+</div> -->
 
-</div>
-
-
-<ul class="nav nav-pills nav-justified nav-fill" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" data-toggle="tab" href="#religion">Religion</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#politics">Politics</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#business">Business</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#innovation">Innovation</a>
-    </li>
-  </ul>
-  <div class="tab-content">
-    <div class="row">
-      <div class="col-md-3">
-        <div id="Religion" class="container tab-pane active" ><br>
-      {{ macro. displayCatList(Religion) }}
-           </div>
-       </div> 
-    </div>
-    <div class="row">
-        <div class="col-md-3">
-         <div id="Politics" class="container tab-pane fade" ><br>
-      {{ macro. displayCatList(Politics) }}
-          </div>
-        </div> 
+<div class="row">
+        <div class="col-md-12">
+            <div class="card card-image">
+              <img src="../static/css/photos/tropical.jpg">
+            </div>
+        </div>
      </div>
-     <div class="row">
-        <div class="col-md-3">
-          <div id="Business" class="container tab-pane fade" ><br>
-      {{ macro. displayCatList(Business)}}
-           </div>
-        </div>
-    </div>
-    <div class="row">
-            <div class="col-md-3">
-    <div id="Innovation" class="container tab-pane fade" ><br>
-      {{ macro. displayCatList(Innovation) }}
-    </div>
-  </div>
+
+
+   
+
 </div>
 
-  <div class="row">
-    <div class="col-md-3">
-        <div id="Innovation" class="container tab-pane fade" ><br>
-                {{ macro. displayComments(comment) }}
-        </div>
-      </div>
+
+
+  </div>
     </div>
-</div>
+    {% for posts in post%}
+    <div class="row">
+    <div class="col-md-12">
+      <div class="thumbnail text-center">
+     <h2>{{posts.description}}</h2>
+      <h5 class="card-header">{{posts.content}}</h5>
+      <div class="card-body">
+      
+        
+        <a href="{{url_for('main.new_comment', id = posts.id)}}" class="btn btn-info">Comment <span>{{posts.comments.count()}}</span></a>
+        <a href="{{url_for('main.new_comment', id = posts.id)}}" class="glyphicon glyphicon-comment" style="margin:10px;color: #e5d429"></a>
+
+          {% endfor %}
+         
+          
+  </div>
+  </div>
+
+  
 
 
 

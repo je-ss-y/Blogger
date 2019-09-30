@@ -2,19 +2,19 @@ from . import db
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_login import UserMixin
 from . import login_manager
-# class Pitches:
-#     '''
-#     Movie class to define Pitches Objects
-#     '''
 
-#     def __init__(self,id,title,overview):
-#         self.id =id
-#         self.title = title
-#         self.overview = overview
-        # self.poster = "https://image.tmdb.org/t/p/w500/" + poster
-        # self.vote_average = vote_average
-        # self.vote_count = vote_count
 
+class Quotes:
+   '''
+   Articles class to define quotes objects
+   '''
+   def __init__(self,id,author,title,quote,url):
+       self.id = id
+       self.author = author
+       self.title = title
+       self.quote = quote
+       self.url = "http://quotes.stormconsultancy.co.uk/quotes/31"
+       
 
 
 # class Comment(db.Model):
@@ -66,7 +66,8 @@ class User(UserMixin,db.Model):
     bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
     pass_secure = db.Column(db.String(255))
-    pitch=db.relationship('Pitch',backref='users',lazy ="dynamic")
+    post=db.relationship('Post',backref='users',lazy ="dynamic")
+    comments=db.relationship('Comment',backref='users',lazy ="dynamic")
 
     @property
     def password(self):
@@ -89,22 +90,46 @@ class User(UserMixin,db.Model):
         return User.query.get(int(user_id))
 
 
-class Pitch(db.Model):
-    __tablename__ = 'pitch'
+class Post(db.Model):
+    __tablename__ = 'post'
     id = db.Column(db.Integer,primary_key = True)
     content = db.Column(db.String(255))
     description = db.Column(db.String(255))
     # upvote = db.Column(db.String(255))
     # downvote = db.Column(db.String(255))
-    category = db.Column(db.String(255))
-
+    # category = db.Column(db.String(255))
+    comments = db.relationship('Comment', backref = 'post' , lazy = 'dynamic')
+    
     user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
 
     @classmethod
     def get_pitches(cls,id):
-        pitches = pitches.query.order_by(pitch_id).desc().all()
-        return pitches
+        posts = posts.query.order_by(post_id).desc().all()
+        return posts
 
 
     def __repr__(self):
-        return f'User {self.pitch}'
+        return f'User {self.post}'
+
+
+class Comment(db.Model):
+    __tablename__ = 'comments'
+
+    id = db.Column(db.Integer, primary_key = True)
+    name =  db.Column(db.String(15))
+    content = db.Column(db.String(100) )            
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+    user_id = db.Column(db.Integer,db.ForeignKey('users.id'))
+
+    def save_comment(self):
+        db.session.add(self)
+        db.session.commit()
+    def delete_comment(self):
+        db.session.delete(self)
+        db.session.commit()
+
+
+
+@login_manager.user_loader
+def user_loader(user_id):
+    return User.query.get(user_id)

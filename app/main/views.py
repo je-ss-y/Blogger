@@ -1,12 +1,14 @@
 
-from flask import render_template,request,redirect,url_for,abort
+from flask import render_template,redirect,url_for,abort
 from . import main
 # from ..request import get_movies,get_movie,search_movie
 # from .forms import ReviewForm,UpdateProfile
-from .forms import PitchForm
-from ..models import User,Pitch
+from .forms import BlogForm ,CommentForm
+from ..models import User,Post , Comment
 from flask_login import login_required,current_user
 from .. import db,photos
+# from .requests import  get_quotes
+
 
 # Review = reviews.Review
 
@@ -21,14 +23,10 @@ def index():
 
     
     title = 'Home - Welcome to The best Movie Review Website Online'
-    pitch =  Pitch.query.filter_by().first()
-    description =  Pitch.query.filter_by().first()
-    Religion = Pitch.query.filter_by(category="Religion")
-    Politics = Pitch.query.filter_by(category="Politics")
-    Business = Pitch.query.filter_by(category="Business")
-    Innovation = Pitch.query.filter_by(category="Innovation")
+    post = Post.query.all()
+   
 
-    return render_template('index.html', title = title , Religion = Religion ,Politics = Politics ,Business = Business , Innovation = Innovation , description =  description)
+    return render_template('index.html', title = title , post = post )
 
 
 
@@ -44,42 +42,43 @@ def index():
 #     return render_template('search.html',movies = searched_movies)
 
 
-# @main.route('/pitches/comment/new/<int:id>', methods = ['GET','POST'])
-# @login_required
-# def new_comment(id):
-
-#     form = CommentForm()
-
-#     # pitch = get_movie(id)
-
-#     if form.validate_on_submit():
-#         description = form.description.data
-#         comment = form.comment.data
-
-#         new_comment = Comment(title,description, content ,review)
-#         new_comment.save_comment()
-
-#         # return redirect(url_for('.movie',id = movie.id ))
-
-#     description = f'{pitch.description} comment'
-#     return render_template('new_comment.html',title = title, comment_form=form, pitch=pitch)
-
-@main.route('/pitches/new/', methods = ['GET','POST'])
+@main.route('/post/comment/new/<int:id>', methods = ['GET','POST'])
 @login_required
-def new_pitch():
-   form = PitchForm()
+def new_comment(id):
+
+    form = CommentForm()
+    post = Post.query.get(id)
+
+    if form.validate_on_submit():
+        name = form.name.data
+        content = form.content.data
+
+        new_comment = Comment(name = name , content = content,  post_id = id  ,user_id = current_user._get_current_object().id)
+        new_comment.save_comment()
+
+        return redirect(url_for('.new_comment', post_id = id ))
+
+    # description = f'{pitch.description} comment'
+    comments = Comment.query.filter_by( post_id= id) .all()
+    return render_template('comment.html', form = form , comments = comments,post=post)
+
+@main.route('/post/new/', methods = ['GET','POST'])
+@login_required
+def new_post():
+   form = BlogForm()
    # my_upvotes = Upvote.query.filter_by(pitch_id = Pitch.id)
    if form.validate_on_submit():
        description = form.description.data
        content = form.content.data
        user_id = current_user
-       category = form.category.data
        print(current_user._get_current_object().id)
-       new_pitch = Pitch(user_id =current_user._get_current_object().id, content = content , category = category , description = description)
-       db.session.add(new_pitch)
+       new_post = Post(user_id =current_user._get_current_object().id, content = content , description = description)
+       db.session.add(new_post)
        db.session.commit()
        return redirect(url_for('main.index'))
-   return render_template('pitches.html',form=form)
+   return render_template('post.html',form=form)
+
+
 @main.route('/user/<uname>')
 def profile(uname):
     user = User.query.filter_by(username = uname).first()
@@ -88,6 +87,20 @@ def profile(uname):
         abort(404)
 
     return render_template("profile/profile.html", user = user)
+
+
+
+
+
+# def quotes(id):
+
+#   '''
+#   View quote page function that returns the quotes details page and its data
+#   '''
+#   quotes = get_quotes(id)
+#   # title = f'{articles.title}'
+
+#   return render_template('quotes.html',quotes = quotes)
 
 
 # @main.route('/user/<uname>/update',methods = ['GET','POST'])

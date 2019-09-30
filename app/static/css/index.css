@@ -1,5 +1,11 @@
-#frm{
-    border-radius: 2px solid blue;
-    
-    
-}
+
+
+
+.card{
+    background-image:url("../photos/tropical.jpg");
+    background-position: top;
+    background-repeat:no-repeat;
+    background-size: cover;
+    height: 800px;
+    width:100%;
+ }
